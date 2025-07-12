@@ -38,8 +38,6 @@ public class Main extends ApplicationAdapter {
     float worldHeight;
 
     Sprite bucketSprite;
-    float bucketSpeed;
-    float bucketDelta;
 
     Vector2 touchVector;
 
@@ -108,13 +106,13 @@ public class Main extends ApplicationAdapter {
 
     private void input() {
         // Has to be in a function that runs per frame because this is getting a delta.
-        bucketDelta = Gdx.graphics.getDeltaTime();
-        bucketSpeed = 4f;
+        float delta = Gdx.graphics.getDeltaTime();
+        float bucketSpeed = 4f;
 
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            bucketSprite.translateX(bucketSpeed * bucketDelta);
+            bucketSprite.translateX(bucketSpeed * delta);
         } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            bucketSprite.translateX(-(bucketSpeed * bucketDelta));
+            bucketSprite.translateX(-(bucketSpeed * delta));
         }
 
         if (Gdx.input.isTouched()) {
