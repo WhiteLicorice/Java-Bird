@@ -88,8 +88,8 @@ public class Main extends ApplicationAdapter {
     @Override
     public void render() {
         draw();
-        input();
-        logic();
+        takeInput();
+        update();
     }
 
     @Override
@@ -104,7 +104,7 @@ public class Main extends ApplicationAdapter {
         viewport.update(width, height, true);
     }
 
-    private void input() {
+    private void takeInput() {
         // Has to be in a function that runs per frame because this is getting a delta.
         float delta = Gdx.graphics.getDeltaTime();
         float bucketSpeed = 4f;
@@ -123,7 +123,7 @@ public class Main extends ApplicationAdapter {
 
     }
 
-    private void logic() {
+    private void update() {
         float delta = Gdx.graphics.getDeltaTime();
 
         moveBucket();
