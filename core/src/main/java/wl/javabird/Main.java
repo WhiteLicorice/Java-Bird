@@ -67,7 +67,6 @@ public class Main extends ApplicationAdapter {
         bgMusic.setVolume(0.5f);
         bgMusic.play();
 
-
         worldWidth = viewport.getWorldWidth();
         worldHeight = viewport.getWorldHeight();
 
@@ -128,30 +127,16 @@ public class Main extends ApplicationAdapter {
 
     private void logic() {
         float delta = Gdx.graphics.getDeltaTime();
-        bucketSprite.setX(MathUtils.clamp(bucketSprite.getX(), 0, worldWidth - bucketSprite.getWidth()));
-        
+
+        moveBucket();
+
         dropTimer += delta;
         if (dropTimer > 1f) {
             createDroplet();
             dropTimer = 0f;
         }
 
-        bucketCollider.set(bucketSprite.getX(), bucketSprite.getY(), bucketSprite.getWidth(), bucketSprite.getHeight());
-
-        for (int i = dropSprites.size - 1; i >= 0; i--) {
-            Sprite drop = dropSprites.get(i);
-            drop.translateY(-2f * delta);
-            dropCollider.set(drop.getX(), drop.getY(), drop.getWidth(), drop.getHeight());
-
-            if (drop.getY() < -drop.getHeight()) {
-                dropSprites.removeIndex(i);
-                score = MathUtils.clamp(--score, 0, 999);
-            } else if (dropCollider.overlaps(bucketCollider)){
-                dropSprites.removeIndex(i);
-                dropSfx.play();
-                score = MathUtils.clamp(++score, 0, 999);
-            }
-        }
+        makeItRain(delta);
     }
 
     private void draw() {
@@ -165,8 +150,8 @@ public class Main extends ApplicationAdapter {
         spriteBatch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
         // spriteBatch.draw(bucketTexture, 0, 0, 1, 1);
 
-        scoreFont.draw(spriteBatch, String.format("%d", score), 0f, worldHeight / 2- scoreFont.getCapHeight());
-        
+        scoreFont.draw(spriteBatch, String.format("%d", score), 0f, worldHeight / 2 - scoreFont.getCapHeight());
+
         // Very similar to how pygame draws on surfs? lol
         bucketSprite.draw(spriteBatch);
 
@@ -186,5 +171,27 @@ public class Main extends ApplicationAdapter {
         dropSprite.setX(MathUtils.random(0f, worldWidth - dropWidth));
         dropSprite.setY(worldHeight);
         dropSprites.add(dropSprite);
+    }
+
+    private void makeItRain(float delta) {
+        for (int i = dropSprites.size - 1; i >= 0; i--) {
+            Sprite drop = dropSprites.get(i);
+            drop.translateY(-2f * delta);
+            dropCollider.set(drop.getX(), drop.getY(), drop.getWidth(), drop.getHeight());
+
+            if (drop.getY() < -drop.getHeight()) {
+                dropSprites.removeIndex(i);
+                score = MathUtils.clamp(--score, 0, 999);
+            } else if (dropCollider.overlaps(bucketCollider)) {
+                dropSprites.removeIndex(i);
+                dropSfx.play();
+                score = MathUtils.clamp(++score, 0, 999);
+            }
+        }
+    }
+
+    private void moveBucket() {
+        bucketSprite.setX(MathUtils.clamp(bucketSprite.getX(), 0, worldWidth - bucketSprite.getWidth()));
+        bucketCollider.set(bucketSprite.getX(), bucketSprite.getY(), bucketSprite.getWidth(), bucketSprite.getHeight());
     }
 }
