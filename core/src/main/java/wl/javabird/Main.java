@@ -88,8 +88,8 @@ public class Main extends ApplicationAdapter {
     @Override
     public void render() {
         draw();
-        takeInput();
         update();
+        takeInput();
     }
 
     @Override
