@@ -96,7 +96,7 @@ public class Main extends ApplicationAdapter {
     public void dispose() {
         spriteBatch.dispose();
         image.dispose();
-
+        dropTexture.dispose();
     }
 
     @Override
