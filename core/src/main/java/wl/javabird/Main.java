@@ -30,7 +30,7 @@ public class Main extends ApplicationAdapter {
     Texture bucketTexture;
     Texture dropTexture;
     Sound dropSfx;
-    Music backgroundMusic;
+    Music bgMusic;
 
     float worldWidth;
     float worldHeight;
@@ -56,7 +56,12 @@ public class Main extends ApplicationAdapter {
         backgroundTexture = new Texture("background.png");
         dropTexture = new Texture("drop.png");
         dropSfx = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
-        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
+
+        bgMusic = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
+        bgMusic.setLooping(true);
+        bgMusic.setVolume(0.5f);
+        bgMusic.play();
+
 
         worldWidth = viewport.getWorldWidth();
         worldHeight = viewport.getWorldHeight();
@@ -130,6 +135,7 @@ public class Main extends ApplicationAdapter {
 
             if ((drop.getY() < -drop.getHeight()) || (dropCollider.overlaps(bucketCollider))) {
                 dropSprites.removeIndex(i);
+                dropSfx.play();
             }
         }
     }
