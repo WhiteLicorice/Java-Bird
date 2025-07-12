@@ -7,6 +7,8 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -48,6 +50,9 @@ public class Main extends ApplicationAdapter {
     Rectangle bucketCollider;
     Rectangle dropCollider;
 
+    BitmapFont scoreFont;
+    int score;
+
     @Override
     public void create() {
         spriteBatch = new SpriteBatch();
@@ -76,6 +81,11 @@ public class Main extends ApplicationAdapter {
 
         bucketCollider = new Rectangle();
         dropCollider = new Rectangle();
+
+        scoreFont = new BitmapFont();
+        scoreFont.getRegion().getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+        scoreFont.getData().setScale(0.1f, 0.1f);
+        score = 0;
     }
 
     @Override
@@ -136,6 +146,7 @@ public class Main extends ApplicationAdapter {
             if ((drop.getY() < -drop.getHeight()) || (dropCollider.overlaps(bucketCollider))) {
                 dropSprites.removeIndex(i);
                 dropSfx.play();
+                score = MathUtils.clamp(++score, 0, 999);
             }
         }
     }
@@ -151,6 +162,8 @@ public class Main extends ApplicationAdapter {
         spriteBatch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
         // spriteBatch.draw(bucketTexture, 0, 0, 1, 1);
 
+        scoreFont.draw(spriteBatch, String.format("%d", score), 0f, worldHeight / 2- scoreFont.getCapHeight());
+        
         // Very similar to how pygame draws on surfs? lol
         bucketSprite.draw(spriteBatch);
 
