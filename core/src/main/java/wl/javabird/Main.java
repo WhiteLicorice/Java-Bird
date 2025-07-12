@@ -143,7 +143,10 @@ public class Main extends ApplicationAdapter {
             drop.translateY(-2f * delta);
             dropCollider.set(drop.getX(), drop.getY(), drop.getWidth(), drop.getHeight());
 
-            if ((drop.getY() < -drop.getHeight()) || (dropCollider.overlaps(bucketCollider))) {
+            if (drop.getY() < -drop.getHeight()) {
+                dropSprites.removeIndex(i);
+                score = MathUtils.clamp(--score, 0, 999);
+            } else if (dropCollider.overlaps(bucketCollider)){
                 dropSprites.removeIndex(i);
                 dropSfx.play();
                 score = MathUtils.clamp(++score, 0, 999);
