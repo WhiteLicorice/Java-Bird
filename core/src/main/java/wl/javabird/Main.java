@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -44,6 +45,9 @@ public class Main extends ApplicationAdapter {
     float dropSpeed;
     float dropTimer;
 
+    Rectangle bucketCollider;
+    Rectangle dropCollider;
+
     @Override
     public void create() {
         spriteBatch = new SpriteBatch();
@@ -64,6 +68,9 @@ public class Main extends ApplicationAdapter {
         touchVector = new Vector2();
         dropSprites = new Array<Sprite>();
         dropSpeed = 2f;
+
+        bucketCollider = new Rectangle();
+        dropCollider = new Rectangle();
     }
 
     @Override
@@ -114,13 +121,16 @@ public class Main extends ApplicationAdapter {
             dropTimer = 0f;
         }
 
+        bucketCollider.set(bucketSprite.getX(), bucketSprite.getY(), bucketSprite.getWidth(), bucketSprite.getHeight());
+
         for (int i = dropSprites.size - 1; i >= 0; i--) {
             Sprite drop = dropSprites.get(i);
             drop.translateY(-2f * delta);
-            if (drop.getY() < -drop.getHeight()) {
+            dropCollider.set(drop.getX(), drop.getY(), drop.getWidth(), drop.getHeight());
+
+            if ((drop.getY() < -drop.getHeight()) || (dropCollider.overlaps(bucketCollider))) {
                 dropSprites.removeIndex(i);
             }
-
         }
     }
 
