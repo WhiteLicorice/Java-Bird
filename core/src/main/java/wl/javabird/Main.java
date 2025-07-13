@@ -18,6 +18,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import wl.javabird.objects.Droplet;
+
 /**
  * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all
  * platforms.
@@ -41,7 +43,8 @@ public class Main extends ApplicationAdapter {
 
     Vector2 touchVector;
 
-    Array<Sprite> dropSprites;
+    Array<Droplet> droplets;
+
     float dropSpeed;
     float dropTimer;
 
@@ -73,7 +76,7 @@ public class Main extends ApplicationAdapter {
         bucketSprite.setSize(1, 1);
 
         touchVector = new Vector2();
-        dropSprites = new Array<Sprite>();
+        droplets = new Array<Droplet>();
         dropSpeed = 2f;
 
         bucketCollider = new Rectangle();
@@ -153,8 +156,8 @@ public class Main extends ApplicationAdapter {
         // Very similar to how pygame draws on surfs? lol
         bucketSprite.draw(spriteBatch);
 
-        for (Sprite dropSprite : dropSprites) {
-            dropSprite.draw(spriteBatch);
+        for (Droplet droplet : droplets) {
+            droplet.draw(spriteBatch);
         }
 
         spriteBatch.end();
@@ -163,25 +166,25 @@ public class Main extends ApplicationAdapter {
     public void createDroplet() {
         float dropHeight = 1;
         float dropWidth = 1;
-
         Sprite dropSprite = new Sprite(dropTexture);
-        dropSprite.setSize(dropWidth, dropHeight);
-        dropSprite.setX(MathUtils.random(0f, worldWidth - dropWidth));
-        dropSprite.setY(worldHeight);
-        dropSprites.add(dropSprite);
+        Vector2 topLeft = new Vector2(MathUtils.random(0f, worldWidth - dropWidth), worldHeight);
+
+        // TODO: Perhaps let a Droplet own these properties instead of making it behave like a factory? Thoughts for scaling.
+        Droplet droplet = new Droplet(dropSprite, dropCollider, dropSpeed, dropWidth, dropHeight, topLeft);
+
+        droplets.add(droplet);
     }
 
     private void makeItRain(float delta) {
-        for (int i = dropSprites.size - 1; i >= 0; i--) {
-            Sprite drop = dropSprites.get(i);
-            drop.translateY(-2f * delta);
-            dropCollider.set(drop.getX(), drop.getY(), drop.getWidth(), drop.getHeight());
+        for (int i = droplets.size - 1; i >= 0; i--) {
+            Droplet droplet = droplets.get(i);
+            droplet.update();
 
-            if (drop.getY() < -drop.getHeight()) {
-                dropSprites.removeIndex(i);
+            if (droplet.getY() < -droplet.getHeight()) {
+                droplets.removeIndex(i);
                 score = MathUtils.clamp(--score, 0, 999);
             } else if (dropCollider.overlaps(bucketCollider)) {
-                dropSprites.removeIndex(i);
+                droplets.removeIndex(i);
                 dropSfx.play();
                 score = MathUtils.clamp(++score, 0, 999);
             }
