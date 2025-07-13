@@ -31,7 +31,7 @@ public class Droplet {
         sprite.translateY(-speed * delta);
         collider.set(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
     }
-    
+
     public void draw(SpriteBatch surf) {
         sprite.draw(surf);
     }

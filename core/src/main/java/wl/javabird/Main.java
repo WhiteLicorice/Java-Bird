@@ -169,7 +169,8 @@ public class Main extends ApplicationAdapter {
         Sprite dropSprite = new Sprite(dropTexture);
         Vector2 topLeft = new Vector2(MathUtils.random(0f, worldWidth - dropWidth), worldHeight);
 
-        // TODO: Perhaps let a Droplet own these properties instead of making it behave like a factory? Thoughts for scaling.
+        // TODO: Perhaps let a Droplet own these properties instead of making it behave
+        // like a factory? Thoughts for scaling.
         Droplet droplet = new Droplet(dropSprite, dropCollider, dropSpeed, dropWidth, dropHeight, topLeft);
 
         droplets.add(droplet);
